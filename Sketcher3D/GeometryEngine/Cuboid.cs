@@ -117,15 +117,15 @@ namespace Sketcher3D.GeometryEngine
             vec.Add(pts);
             pts.Clear();
 
-            foreach ( var ptsVec in vec)
-	{
+            foreach (var ptsVec in vec)
+            {
                 foreach (var pt in ptsVec)
-		{
-                    pt.writeXYZ(out);
+                {
+                    pt.WriteXYZ(writer);
                 }
-		out << "\n\n";
+                writer.Write("\n\n");
             }
-	out << "\n\n";
+            writer.Write("\n\n");
         }
     }
 }
