@@ -26,7 +26,7 @@ namespace Sketcher3D.GeometryEngine
             double y = 0;
             double z = 0;
 
-            int p0Ind = mTriangulation.GetPointIndex(new Point(x, y, z));
+            int p0Ind = mTriangulation.GetPointIndex(new Point(x, y, z));   // Triangulation
             int p1Ind = mTriangulation.GetPointIndex(new Point(x + mSide, y, z));
             int p2Ind = mTriangulation.GetPointIndex(new Point(x + mSide, y + mSide, z));
 
