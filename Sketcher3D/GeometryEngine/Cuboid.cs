@@ -23,12 +23,12 @@ namespace Sketcher3D.GeometryEngine
             Build();
         }
 
-        public double GetLength()  { return mLength; }
+        public double GetLength() { return mLength; }
         public double GetWidth() { return mWidth; }
         public double GetHeight() { return mHeight; }
 
 
-        protected override void Build  () 
+        protected override void Build()
         {
             double x = 0;
             double y = 0;
@@ -73,7 +73,7 @@ namespace Sketcher3D.GeometryEngine
         public override void SaveForGNU(StreamWriter writer)
         {
             List<List<Point>> vec = new List<List<Point>>();
-            List <Point> pts = new List<Point>();
+            List<Point> pts = new List<Point>();
 
             double x = 0;
             double y = 0;
