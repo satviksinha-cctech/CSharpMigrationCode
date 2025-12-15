@@ -20,7 +20,7 @@ namespace Sketcher3D.GeometryEngine
         }
 
         protected Triangulation mTriangulation = new Triangulation();
-        public Triangulation GetTriangulation() { return mTriangulation; }
+        public Triangulation GetTriangulation() { return mTriangulation; } 
         protected abstract void Build();
 
         public string GetShapeName() {  return mName;  }
@@ -28,6 +28,6 @@ namespace Sketcher3D.GeometryEngine
 
         public abstract void Save(StreamWriter writer);
         public abstract void SaveForGNU(StreamWriter writer);
-
+        //
     }
 }

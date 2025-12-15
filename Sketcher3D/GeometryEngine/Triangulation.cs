@@ -12,7 +12,7 @@ namespace Sketcher3D.GeometryEngine
         private List<Point> mPoints = new List<Point>();
         private List<Point> mNormals = new List<Point>();
         private List<Triangle> mTriangles = new List<Triangle>();
-        private Dictionary<Point, int> pointIndex = new Dictionary<Point, int>(); //// map: point - index in mPoints
+        private Dictionary<Point, int> pointIndex = new Dictionary<Point, int>(); 
 
         public Triangulation() { }
 

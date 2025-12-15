@@ -21,7 +21,7 @@ namespace Sketcher3D.GeometryEngine
                 this.mNormal = normal;
 
             this.m1 = m1;
-            this.m2 = m2;
+            this.m2 = m2;   
             this.m3 = m3;
         }
 
