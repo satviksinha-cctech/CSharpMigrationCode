@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sketcher3D.GeometryEngine
 {
@@ -13,47 +9,111 @@ namespace Sketcher3D.GeometryEngine
         private double mY;
         private double mZ;
 
-        public Point() 
+        public const double tolerance = 1e-6;
+
+        public Point()
         {
-            this.mX = 0;
-            this.mY = 0;
-            this.mZ = 0;
+            mX = 0;
+            mY = 0;
+            mZ = 0;
         }
+
         public Point(double x, double y, double z)
         {
-            this.mX = x;
-            this.mY = y;
-            this.mZ = z;
+            mX = x;
+            mY = y;
+            mZ = z;
         }
 
-        public double GetX() { return mX; }
-        public double GetY() { return mY; }
-        public double GetZ() { return mZ; }
-
-        public void SetX(double x) { mX = x; }
-        public void SetY(double y) { mY = y; }
-        public void SetZ(double z) { mZ = z; }
-
-        public double Distance (Point other)
+        public double GetX()
         {
-            return Math.Sqrt((mX - other.mX) * (mX - other.mX) +
-                      (mY - other.mY) * (mY - other.mY) +
-                      (mZ - other.mZ) * (mZ - other.mZ));
+            return mX;
+        }
+
+        public double GetY()
+        {
+            return mY;
+        }
+
+        public double GetZ()
+        {
+            return mZ;
+        }
+
+        public double X
+        {
+            get { return mX; }
+        }
+
+        public double Y
+        {
+            get { return mY; }
+        }
+
+        public double Z
+        {
+            get { return mZ; }
+        }
+
+        public void SetX(double x)
+        {
+            mX = x;
+        }
+
+        public void SetY(double y)
+        {
+            mY = y;
+        }
+
+        public void SetZ(double z)
+        {
+            mZ = z;
+        }
+
+        public double Distance(Point other)
+        {
+            return Math.Sqrt(
+                (mX - other.mX) * (mX - other.mX) +
+                (mY - other.mY) * (mY - other.mY) +
+                (mZ - other.mZ) * (mZ - other.mZ)
+            );
         }
 
         public void WriteXYZ(StreamWriter writer)
         {
-            writer.Write(mX); writer.Write(" ");
-            writer.Write(mY); writer.Write(" ");
+            writer.Write(mX);
+            writer.Write(" ");
+            writer.Write(mY);
+            writer.Write(" ");
             writer.Write(mZ);
         }
 
-        public const double tolerance = 10e-6; // check is this correct way
         public bool IsEqual(Point other)
         {
-            return ((mX - other.mX < tolerance) && 
-                    (mY - other.mY < tolerance) &&
-                    ((mZ - other.mZ) < tolerance));
+            return Math.Abs(mX - other.mX) < tolerance &&
+                   Math.Abs(mY - other.mY) < tolerance &&
+                   Math.Abs(mZ - other.mZ) < tolerance;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Point other = obj as Point;
+            if (other == null)
+                return false;
+
+            return IsEqual(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + mX.GetHashCode();
+                hash = hash * 23 + mY.GetHashCode();
+                hash = hash * 23 + mZ.GetHashCode();
+                return hash;
+            }
         }
     }
 }

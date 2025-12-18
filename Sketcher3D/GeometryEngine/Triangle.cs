@@ -1,29 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sketcher3D.GeometryEngine
+﻿namespace Sketcher3D.GeometryEngine
 {
     internal class Triangle
     {
         public int m1;
         public int m2;
         public int m3;
-        public Point mNormal;
 
-        public Triangle(int m1, int m2, int m3, Point normal = null)
+        public Triangle(int a, int b, int c)
         {
-            if(normal == null)
-                normal = new Point();
-            else 
-                this.mNormal = normal;
-
-            this.m1 = m1;
-            this.m2 = m2;   
-            this.m3 = m3;
+            m1 = a;
+            m2 = b;
+            m3 = c;
         }
 
+        public int A
+        {
+            get { return m1; }
+        }
+
+        public int B
+        {
+            get { return m2; }
+        }
+
+        public int C
+        {
+            get { return m3; }
+        }
     }
 }

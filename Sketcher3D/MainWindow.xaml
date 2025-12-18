@@ -1,12 +1,30 @@
 ﻿<Window x:Class="Sketcher3D.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sketcher3D"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Sketcher3D" Width="900" Height="600">
+
+    <DockPanel>
+
+        <!-- Menu -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File"/>
+            <MenuItem Header="Edit"/>
+        </Menu>
+
+        <!-- Toolbar -->
+        <StackPanel DockPanel.Dock="Top"
+                    Orientation="Horizontal"
+                    Margin="5">
+            <Button Content="Cuboid"   Width="80" Margin="3" Click="Cuboid_Click"/>
+            <Button Content="Cube"     Width="80" Margin="3" Click="Cube_Click"/>
+            <Button Content="Cone"     Width="80" Margin="3" Click="Cone_Click"/>
+            <Button Content="Sphere"   Width="80" Margin="3" Click="Sphere_Click"/>
+            <Button Content="Cylinder" Width="80" Margin="3" Click="Cylinder_Click"/>
+            <Button Content="Pyramid"  Width="80" Margin="3" Click="Pyramid_Click"/>
+        </StackPanel>
+
+        <!-- Drawing Area -->
+        <Canvas x:Name="Viewport"
+                Background="White"/>
+    </DockPanel>
 </Window>

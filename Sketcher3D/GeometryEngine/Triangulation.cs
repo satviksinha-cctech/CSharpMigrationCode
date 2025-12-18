@@ -1,104 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Automation.Peers;
 
 namespace Sketcher3D.GeometryEngine
 {
     internal class Triangulation
     {
-        private List<Point> mPoints = new List<Point>();
-        private List<Point> mNormals = new List<Point>();
-        private List<Triangle> mTriangles = new List<Triangle>();
-        private Dictionary<Point, int> pointIndex = new Dictionary<Point, int>(); 
+        private readonly List<Point> _points = new List<Point>();
+        private readonly List<Triangle> _triangles = new List<Triangle>();
 
-        public Triangulation() { }
+        private readonly Dictionary<Point, int> _pointIndex =
+            new Dictionary<Point, int>();
 
-        public List<Point> GetPoints() { return mPoints; }
-        public List<Triangle> GetTriangles() { return mTriangles; }
-        public List<Point> GetNormals() { return mNormals; }
+        public IReadOnlyList<Point> GetPoints()
+        {
+            return _points;
+        }
+
+        public IReadOnlyList<Triangle> GetTriangles()
+        {
+            return _triangles;
+        }
 
         public int GetPointIndex(Point p)
         {
-            if (pointIndex.TryGetValue(p, out int existingIndex)) 
-                return existingIndex;
-            int index = mPoints.Count;
-            mPoints.Add(p);
-            pointIndex[p] = index;
+            if (_pointIndex.TryGetValue(p, out int index))
+                return index;
+
+            index = _points.Count;
+            _points.Add(p);
+            _pointIndex[p] = index;
             return index;
         }
 
-        public void AddTriangle(int a, int b, int c, Point normal = null)
+        public void AddTriangle(int a, int b, int c)
         {
-            
-            Triangle tri = new Triangle(a, b, c, normal);
-            mTriangles.Add(tri);
-            if (normal == null)
-                normal = new Point();
-            else
-                normal = CalculateNormal(tri);
-            mNormals.Add(normal);
-
-        }
-        private Point CalculateNormal(Triangle tri)
-        {
-            double x = mPoints[tri.m2].GetX() - mPoints[tri.m1].GetX();
-            double y = mPoints[tri.m2].GetY() - mPoints[tri.m1].GetY();
-            double z = mPoints[tri.m2].GetZ() - mPoints[tri.m1].GetZ();
-
-            Point u = new Point(x, y, z);
-
-            x = mPoints[tri.m3].GetX() - mPoints[tri.m1].GetX();
-            y = mPoints[tri.m3].GetY() - mPoints[tri.m1].GetY();
-            z = mPoints[tri.m3].GetZ() - mPoints[tri.m1].GetZ();
-
-            Point v = new Point(x, y, z);
-
-            double nx = u.GetY() * v.GetZ() - u.GetZ() * v.GetY();
-            double ny = u.GetZ() * v.GetX() - u.GetX() * v.GetZ();
-            double nz = u.GetX() * v.GetY() - u.GetY() * v.GetX();
-
-            double len = Math.Sqrt(nx * nx + ny * ny + nz * nz);
-            u = new Point(nx / len, ny / len, nz / len);
-            return u;
+            _triangles.Add(new Triangle(a, b, c));
         }
 
-        public List<double> GetPointsDoubleData()
+        public List<double> GetPointDoubleData()
         {
-            List<double> points = new List<double>();
+            List<double> data = new List<double>();
 
-            foreach(Triangle tri in mTriangles)
+            foreach (var tri in _triangles)
             {
-                points.Add(mPoints[tri.m1].GetX());
-                points.Add(mPoints[tri.m1].GetY());
-                points.Add(mPoints[tri.m1].GetZ());
+                Point p1 = _points[tri.A];
+                Point p2 = _points[tri.B];
+                Point p3 = _points[tri.C];
 
-                points.Add(mPoints[tri.m2].GetX());
-                points.Add(mPoints[tri.m2].GetY());
-                points.Add(mPoints[tri.m2].GetZ());
-
-                points.Add(mPoints[tri.m3].GetX());
-                points.Add(mPoints[tri.m3].GetY());
-                points.Add(mPoints[tri.m3].GetZ());
+                data.Add(p1.GetX()); data.Add(p1.GetY()); data.Add(p1.GetZ());
+                data.Add(p2.GetX()); data.Add(p2.GetY()); data.Add(p2.GetZ());
+                data.Add(p3.GetX()); data.Add(p3.GetY()); data.Add(p3.GetZ());
             }
-            return points;
-        }
 
-        public List<double> GetNormalDoubleData()
-        {
-            List<double> points = new List<double>();
-
-            foreach (Triangle tri in mTriangles)
-            {
-                Point pt = CalculateNormal(tri);
-
-                points.Add(pt.GetX());
-                points.Add(pt.GetY());
-                points.Add(pt.GetZ());
-            }
-            return points;
+            return data;
         }
     }
 }

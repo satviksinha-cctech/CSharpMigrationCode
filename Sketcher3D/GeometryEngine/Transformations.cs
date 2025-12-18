@@ -1,194 +1,38 @@
-﻿using System.Collections.Generic;
-using System.Windows.Media;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Sketcher3D.GeometryEngine
 {
-    internal class Transformations
+    internal static class Transformations
     {
-        public Transformations() { }
-
-        public static Point CalculatePivot(List<Point> vertices) //centroid calculation
+        public static List<Point> RotateX(List<Point> points, double angle)
         {
-            double cx = 0;
-            double cy = 0;
-            double cz = 0;
+            var result = new List<Point>();
+            double cos = Math.Cos(angle);
+            double sin = Math.Sin(angle);
 
-            return new Point(cx, cy, cz);
+            foreach (var p in points)
+            {
+                double y = p.GetY() * cos - p.GetZ() * sin;
+                double z = p.GetY() * sin + p.GetZ() * cos;
+                result.Add(new Point(p.GetX(), y, z));
+            }
+            return result;
         }
 
-        public static List<Point> ApplyTransform(List<Point> vertices, Matrix matrix)
+        public static List<Point> RotateY(List<Point> points, double angle)
         {
-            List<Point> transformedPts = new List<Point>();
+            var result = new List<Point>();
+            double cos = Math.Cos(angle);
+            double sin = Math.Sin(angle);
 
-            for (int i = 0; i < vertices.Count; i++)
+            foreach (var p in points)
             {
-                Point p = vertices[i];
-
-                Matrix pt = new Matrix(4, 1);
-                pt.data[0][0] = p.GetX();
-                pt.data[1][0] = p.GetY();
-                pt.data[2][0] = p.GetZ();
-                pt.data[3][0] = 1.0;
-
-                Matrix result = Matrix.MatrixMultiply(matrix, pt);
-
-                transformedPts.Add(
-                    new Point(
-                        result.data[0][0],
-                        result.data[1][0],
-                        result.data[2][0]
-                    )
-                );
+                double x = p.GetX() * cos + p.GetZ() * sin;
+                double z = -p.GetX() * sin + p.GetZ() * cos;
+                result.Add(new Point(x, p.GetY(), z));
             }
-
-            return transformedPts;
-        }
-
-        public static List<float> Translate(List<float> vec, double transX, double transY, double transZ)
-        {
-            List<Point> vertices = new List<Point>();
-
-            for (int i = 0; i < vec.Count; i += 3)
-            {
-                vertices.Add(new Point(vec[i], vec[i + 1], vec[i + 2]));
-            }
-
-            Matrix transMat = Matrix.GetTranslationMatrix(transX, transY, transZ);
-            List<Point> transformedPts = ApplyTransform(vertices, transMat);
-
-            for (int i = 0; i < transformedPts.Count; i++)
-            {
-                Point p = transformedPts[i];
-                vec.Add((float)p.GetX());
-                vec.Add((float)p.GetY());
-                vec.Add((float)p.GetZ());
-            }
-
-            return vec;
-        }
-
-        public static List<float> Scale(List<float> vec, double scaleX, double scaleY, double scaleZ)
-        {
-            List<Point> vertices = new List<Point>();
-
-            for (int i = 0; i < vec.Count; i += 3)
-            {
-                vertices.Add(new Point(vec[i], vec[i + 1], vec[i + 2]));
-            }
-
-            Point pivot = CalculatePivot(vertices);
-
-            Matrix translate1 = Matrix.GetTranslationMatrix(-pivot.GetX(), -pivot.GetY(), -pivot.GetY());
-            Matrix scaleMat = Matrix.GetScalingMatrix(scaleX, scaleY, scaleZ);
-            Matrix translate2 = Matrix.GetTranslationMatrix(pivot.GetX(), pivot.GetY(), pivot.GetY());
-
-            Matrix transformed = Matrix.MatrixMultiply(translate2, scaleMat);
-            transformed = Matrix.MatrixMultiply(transformed, translate1);
-
-            List<Point> transformedPts = ApplyTransform(vertices, transformed);
-
-            for (int i = 0; i < transformedPts.Count; i++)
-            {
-                Point p = transformedPts[i];
-                vec.Add((float)p.GetX());
-                vec.Add((float)p.GetY());
-                vec.Add((float)p.GetZ());
-            }
-
-            return vec;
-        }
-
-        public static List<float> RotationX(List<float> vec, double degreeX)
-        {
-            List<Point> vertices = new List<Point>();
-
-            for (int i = 0; i < vec.Count; i += 3)
-            {
-                vertices.Add(new Point(vec[i], vec[i + 1], vec[i + 2]));
-            }
-
-            Point pivot = CalculatePivot(vertices);
-
-            Matrix translate1 = Matrix.GetTranslationMatrix(-pivot.GetX(), -pivot.GetY(), -pivot.GetY());
-            Matrix rotateXMat = Matrix.GetRotationXMatrix(degreeX);
-            Matrix translate2 = Matrix.GetTranslationMatrix(pivot.GetX(), pivot.GetY(), pivot.GetY());
-
-            Matrix transformed = Matrix.MatrixMultiply(translate2, rotateXMat);
-            transformed = Matrix.MatrixMultiply(transformed, translate1);
-
-            List<Point> transformedPts = ApplyTransform(vertices, transformed);
-
-            for (int i = 0; i < transformedPts.Count; i++)
-            {
-                Point p = transformedPts[i];
-                vec.Add((float)p.GetX());
-                vec.Add((float)p.GetY());
-                vec.Add((float)p.GetZ());
-            }
-
-            return vec;
-        }
-
-        public static List<float> RotationY(List<float> vec, double degreeY)
-        {
-            List<Point> vertices = new List<Point>();
-
-            for (int i = 0; i < vec.Count; i += 3)
-            {
-                vertices.Add(new Point(vec[i], vec[i + 1], vec[i + 2]));
-            }
-
-            Point pivot = CalculatePivot(vertices);
-
-            Matrix translate1 = Matrix.GetTranslationMatrix(-pivot.GetX(), -pivot.GetY(), -pivot.GetY());
-            Matrix rotateYMat = Matrix.GetRotationYMatrix(degreeY);
-            Matrix translate2 = Matrix.GetTranslationMatrix(pivot.GetX(), pivot.GetY(), pivot.GetY());
-
-            Matrix transformed = Matrix.MatrixMultiply(translate2, rotateYMat);
-            transformed = Matrix.MatrixMultiply(transformed, translate1);
-
-            List<Point> transformedPts = ApplyTransform(vertices, transformed);
-
-            for (int i = 0; i < transformedPts.Count; i++)
-            {
-                Point p = transformedPts[i];
-                vec.Add((float)p.GetX());
-                vec.Add((float)p.GetY());
-                vec.Add((float)p.GetZ());
-            }
-
-            return vec;
-        }
-
-        public static List<float> RotationZ(List<float> vec, double degreeZ)
-        {
-            List<Point> vertices = new List<Point>();
-
-            for (int i = 0; i < vec.Count; i += 3)
-            {
-                vertices.Add(new Point(vec[i], vec[i + 1], vec[i + 2]));
-            }
-
-            Point pivot = CalculatePivot(vertices);
-
-            Matrix translate1 = Matrix.GetTranslationMatrix(-pivot.GetX(), -pivot.GetY(), -pivot.GetY());
-            Matrix rotateZMat = Matrix.GetRotationZMatrix(degreeZ);
-            Matrix translate2 = Matrix.GetTranslationMatrix(pivot.GetX(), pivot.GetY(), pivot.GetY());
-
-            Matrix transformed = Matrix.MatrixMultiply(translate2, rotateZMat);
-            transformed = Matrix.MatrixMultiply(transformed, translate1);
-
-            List<Point> transformedPts = ApplyTransform(vertices, transformed);
-
-            for (int i = 0; i < transformedPts.Count; i++)
-            {
-                Point p = transformedPts[i];
-                vec.Add((float)p.GetX());
-                vec.Add((float)p.GetY());
-                vec.Add((float)p.GetZ());
-            }
-
-            return vec;
+            return result;
         }
     }
 }

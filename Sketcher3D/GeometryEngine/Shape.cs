@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.IO;
 
 namespace Sketcher3D.GeometryEngine
 {
@@ -12,22 +6,38 @@ namespace Sketcher3D.GeometryEngine
     {
         private string mType;
         private string mName;
-        
-        public Shape(string type, string name) 
-        {
-            this.mType = type;
-            this.mName = name;
-        }
 
         protected Triangulation mTriangulation = new Triangulation();
-        public Triangulation GetTriangulation() { return mTriangulation; } 
-        protected abstract void Build();
 
-        public string GetShapeName() {  return mName;  }
-        public string GetShapeType() { return mType; }
+        protected Shape(string type, string name)
+        {
+            mType = type;
+            mName = name;
+        }
+
+        public string GetShapeName()
+        {
+            return mName;
+        }
+
+        public string GetShapeType()
+        {
+            return mType;
+        }
+
+        public Triangulation GetTriangulation()
+        {
+            return mTriangulation;
+        }
+
+        public Triangulation Triangulation
+        {
+            get { return mTriangulation; }
+        }
+
+        protected abstract void Build();
 
         public abstract void Save(StreamWriter writer);
         public abstract void SaveForGNU(StreamWriter writer);
-        //
     }
 }
