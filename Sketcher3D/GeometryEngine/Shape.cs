@@ -15,27 +15,15 @@ namespace Sketcher3D.GeometryEngine
             mName = name;
         }
 
-        public string GetShapeName()
-        {
-            return mName;
-        }
-
-        public string GetShapeType()
-        {
-            return mType;
-        }
+        protected abstract void Build();
 
         public Triangulation GetTriangulation()
         {
             return mTriangulation;
         }
 
-        public Triangulation Triangulation
-        {
-            get { return mTriangulation; }
-        }
-
-        protected abstract void Build();
+        public string GetShapeName() => mName;
+        public string GetShapeType() => mType;
 
         public abstract void Save(StreamWriter writer);
         public abstract void SaveForGNU(StreamWriter writer);
